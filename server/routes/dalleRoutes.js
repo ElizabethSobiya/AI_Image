@@ -15,19 +15,19 @@ router.route('/').get((req, res) => {
     res.send('Open ai dalle')
 });
 
-router.route('/').post((req, res) => {
+router.route('/').post(async(req, res) => {
 try {
     const {prompt} = req.body;
-    const imageCreation =openai.createImage({
+    const imageCreation = await openai.createImage({
         prompt,
         n:1,
         size:'1024x1024',
         response_format:"b64_json",
     });
-    const aiImage =imageCreation.data.data[0].b64_json;
-    res.status(200).json({photo: aiImage})  
+    const image =imageCreation.data.data[0].b64_json;
+    res.status(200).json({photo: image})  
 } catch (error) {
-    console.log(error);
+    console.log(error, 'err');
     res.status(500).send(error?.response.data.error.message);
 }
 });
